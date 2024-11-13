@@ -1,0 +1,18 @@
+[package]
+name = "easyerr_derive"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1"
+syn = { version = "2", features = ["full", "visit", "extra-traits"] }
+quote = "1"
+
+[dev-dependencies]
+easyerr = { path = "../easyerr" }
+
+[lints]
+workspace = true

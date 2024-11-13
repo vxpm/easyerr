@@ -1,0 +1,10 @@
+[package]
+name = "easyerr"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+easyerr_derive = { path = "../easyerr_derive" }
+
+[lints]
+workspace = true
