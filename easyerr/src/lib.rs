@@ -58,7 +58,7 @@ impl<T, E1> ResultExt<T, E1> for Result<T, E1> {
 macro_rules! ensure {
     ($cond:expr, $e:expr $(,)?) => {
         if !($cond) {
-            return Err($e);
+            return Err($e.into());
         }
     };
 }
