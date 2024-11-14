@@ -2,9 +2,9 @@ use easyerr::*;
 
 #[derive(Debug, Error)]
 #[error(transparent)]
-pub struct FooError {
+pub struct FooError<const LEN: usize> {
     source: std::io::Error,
-    x: u64,
+    x: [u64; LEN],
 }
 
 #[derive(Debug, Error)]
@@ -17,5 +17,5 @@ pub struct BazError;
 
 pub fn main() {
     let _e = Err::<(), _>(std::io::Error::new(std::io::ErrorKind::NotFound, "oops"))
-        .context(FooCtx { x: 0 });
+        .context(FooCtx { x: [0] });
 }

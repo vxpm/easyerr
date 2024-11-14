@@ -64,29 +64,36 @@ fn extract_source_field<'f>(fields: impl Iterator<Item = &'f Field>) -> (Vec<Fie
     (fields, source_ty)
 }
 
-fn is_required_generic_for_type(ty: &Type, generic: &Ident) -> bool {
+fn is_required_generic_for_type(ty: &Type, is_const: bool, generic: &Ident) -> bool {
     struct PathVisitor<'g> {
         generic: &'g Ident,
+        is_const: bool,
         required: bool,
     }
 
     impl<'ast> Visit<'ast> for PathVisitor<'_> {
-        fn visit_type_path(&mut self, node: &'ast TypePath) {
-            if node.qself.is_none() {
-                if let Some(first_segment) = node.path.segments.first() {
-                    if first_segment.ident == *self.generic {
-                        self.required = true;
-                        return;
-                    }
-                }
+        fn visit_expr_path(&mut self, path: &'ast syn::ExprPath) {
+            if self.is_const && path.qself.is_none() && path.path.is_ident(self.generic) {
+                self.required = true;
+                return;
             }
 
-            visit::visit_type_path(self, node);
+            visit::visit_expr_path(self, path);
+        }
+
+        fn visit_type_path(&mut self, path: &'ast TypePath) {
+            if path.qself.is_none() && path.path.is_ident(self.generic) {
+                self.required = true;
+                return;
+            }
+
+            visit::visit_type_path(self, path);
         }
     }
 
     let mut path_visitor = PathVisitor {
         generic,
+        is_const,
         required: false,
     };
 
@@ -101,13 +108,13 @@ fn is_required_lifetime_for_type(ty: &Type, lifetime: &Lifetime) -> bool {
     }
 
     impl<'ast> Visit<'ast> for LifetimeVisitor<'_> {
-        fn visit_lifetime(&mut self, node: &'ast Lifetime) {
-            if node.ident == self.lifetime.ident {
+        fn visit_lifetime(&mut self, lifetime: &'ast Lifetime) {
+            if lifetime.ident == self.lifetime.ident {
                 self.required = true;
                 return;
             }
 
-            visit::visit_lifetime(self, node);
+            visit::visit_lifetime(self, lifetime);
         }
     }
 
@@ -130,11 +137,15 @@ fn generics_required_by_type(generics: &Generics, ty: &Type) -> Vec<GenericParam
                 }
             }
             GenericParam::Type(generic_ty) => {
-                if is_required_generic_for_type(ty, &generic_ty.ident) {
+                if is_required_generic_for_type(ty, false, &generic_ty.ident) {
                     result.push(generic.clone());
                 }
             }
-            GenericParam::Const(_) => todo!(),
+            GenericParam::Const(const_generic) => {
+                if is_required_generic_for_type(ty, true, &const_generic.ident) {
+                    result.push(generic.clone());
+                }
+            }
         }
     }
 
