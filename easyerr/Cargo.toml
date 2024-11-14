@@ -3,6 +3,7 @@ name = "easyerr"
 description = "crate for easier creation and transformation of error types"
 version = "0.1.0"
 repository = "https://github.com/vxpm/easyerr"
+readme = "../README.md"
 license = "MIT"
 edition = "2021"
 
