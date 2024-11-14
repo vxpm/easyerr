@@ -1,3 +1,5 @@
+#![doc = include_str!("../../README.md")]
+
 pub use easyerr_derive::Error;
 
 /// Prelude. Currently, just reexports everything (a grand total of... 4 items), but might change
@@ -54,6 +56,7 @@ impl<T, E1> ResultExt<T, E1> for Result<T, E1> {
     }
 }
 
+/// Macro that evaluates an expression and returns an error if it is not true.
 #[macro_export]
 macro_rules! ensure {
     ($cond:expr, $e:expr $(,)?) => {

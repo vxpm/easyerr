@@ -1,10 +1,13 @@
 [package]
 name = "easyerr"
+description = "crate for easier creation and transformation of error types"
 version = "0.1.0"
+repository = "https://github.com/vxpm/easyerr"
+license = "MIT"
 edition = "2021"
 
 [dependencies]
-easyerr_derive = { path = "../easyerr_derive" }
+easyerr_derive = { version = "0.1.0", path = "../easyerr_derive" }
 
 [lints]
 workspace = true
