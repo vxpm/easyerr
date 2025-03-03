@@ -1,4 +1,5 @@
-#![doc = include_str!(concat!("../", std::env!("CARGO_PKG_README")))]
+#![doc = include_str!(concat!("../", core::env!("CARGO_PKG_README")))]
+#![no_std]
 
 pub use easyerr_derive::Error;
 
@@ -11,12 +12,12 @@ pub mod prelude {
 /// Trait for types which can add context to some [`Error`] ([`Source`](Self::Source)), transforming
 /// it into a new [`Error`] ([`Err`](Self::Err)).
 ///
-/// [`Error`]: std::error::Error
+/// [`Error`]: core::error::Error
 pub trait ErrorContext {
     /// The source error type which this context can be added to.
-    type Source: std::error::Error;
+    type Source: core::error::Error;
     /// The new error type after adding this context.
-    type Err: std::error::Error;
+    type Err: core::error::Error;
 
     /// Add this context to the given error [`Source`](Self::Source), transforming it into
     /// [`Err`](Self::Err).

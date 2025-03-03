@@ -125,9 +125,9 @@ fn generate_struct_display_impl(struct_: &ItemStruct) -> Result<TokenStream, Err
     let struct_ident = &struct_.ident;
     let (impl_generics, ty_generics, where_clause) = struct_.generics.split_for_impl();
     Ok(quote! {
-        impl #impl_generics std::fmt::Display for #struct_ident #ty_generics #where_clause {
+        impl #impl_generics core::fmt::Display for #struct_ident #ty_generics #where_clause {
             #[allow(unused_variables)]
-            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                 #display
             }
         }
@@ -159,8 +159,8 @@ fn generate_struct_error_impl(struct_: &ItemStruct) -> Result<TokenStream, Error
     };
 
     Ok(quote! {
-        impl #impl_generics ::std::error::Error for #ty_ident #ty_generics #where_clause {
-            fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        impl #impl_generics ::core::error::Error for #ty_ident #ty_generics #where_clause {
+            fn source(&self) -> Option<&(dyn ::core::error::Error + 'static)> {
                 #source
             }
         }

@@ -199,9 +199,9 @@ fn generate_enum_display_impl(enum_: &ItemEnum) -> Result<TokenStream, Error> {
     let (impl_generics, ty_generics, where_clause) = enum_.generics.split_for_impl();
 
     Ok(quote! {
-        impl #impl_generics std::fmt::Display for #enum_ident #ty_generics #where_clause {
+        impl #impl_generics core::fmt::Display for #enum_ident #ty_generics #where_clause {
             #[allow(unused_variables)]
-            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                 match self {
                     #(#match_arms),*
                 }
@@ -279,8 +279,8 @@ fn generate_enum_error_impl(enum_: &ItemEnum) -> Result<TokenStream, Error> {
     let match_arms = match_arms?;
 
     Ok(quote! {
-        impl #impl_generics ::std::error::Error for #ty_ident #ty_generics #where_clause {
-            fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        impl #impl_generics ::core::error::Error for #ty_ident #ty_generics #where_clause {
+            fn source(&self) -> Option<&(dyn ::core::error::Error + 'static)> {
                 match self {
                     #(#match_arms),*
                 }
